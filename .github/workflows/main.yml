@@ -1,7 +1,8 @@
 name: main
 on: [push]
 jobs:
-  build:
+  build_x86:
+    name: Build on ${{ matrix.os }} x86
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -9,6 +10,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: make
+      - uses: romgrk/publish-to-github@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build_aarch64:
+    name: Build on ubuntu20.04 aarch64
+    runs-on: ubuntu20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          arch: aarch64
+          distro: ubuntu20.04
+          run: make
       - uses: romgrk/publish-to-github@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
